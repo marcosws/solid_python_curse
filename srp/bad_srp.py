@@ -1,0 +1,33 @@
+import requests
+import json
+
+
+
+class ListRepositrioes():
+
+    API_BASE_URL = 'https://api.github.com'
+
+    def __init__(self, user):
+        self.user = user
+
+
+    def get_repos_by_user(self):
+        response = requests.get(f'{self.API_BASE_URL}/users/{self.user}/repos')
+        #print(response.json())
+        if response.status_code == 200:
+            return {"status_code": 200, "body": response.json()}
+        else:
+            return {"status_code": response.status_code, "body": "Error while getting respositories"}
+
+
+    def parse_response(self):
+        response = self.get_repos_by_user()
+        body = response['body']
+        if response['status_code'] == 200:
+            for i in range(len(body)):
+                print(f'{body[i]["id"]} {body[i]["name"]} - {body[i]["stargazers_count"]}')
+
+
+
+repos = ListRepositrioes('marcosws')
+repos.parse_response()
